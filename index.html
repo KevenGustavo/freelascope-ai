@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; connect-src 'self' https://generativelanguage.googleapis.com https://economia.awesomeapi.com.br; img-src 'self' data:; object-src 'none'; base-uri 'self';">
+  <meta name="description" content="FreelaScope AI — Estimativa técnica de escopo (WBS) e precificação de projetos de software.">
+  <title>FreelaScope — Estimativa Técnica e Precificação</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="app-header">
+    <div class="header-container">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+            <polyline points="2 17 12 22 22 17"></polyline>
+            <polyline points="2 12 12 17 22 12"></polyline>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <span class="brand-title">FreelaScope</span>
+          <span class="brand-divider" aria-hidden="true">/</span>
+          <span class="brand-subtitle">Workbench de Estimativa Técnica</span>
+        </div>
+      </div>
+
+      <div class="header-controls">
+        <div id="status-rede" class="status-pill" aria-live="polite">
+          <span class="status-dot status-idle" aria-hidden="true"></span>
+          <span id="status-texto">Sistema pronto</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="app-main">
+    <div class="workbench-grid">
+
+      <!-- Painel Esquerdo: Parâmetros e Escopo -->
+      <section class="panel panel-config" aria-labelledby="titulo-config">
+        <header class="panel-header">
+          <div>
+            <h1 id="titulo-config" class="panel-title">Parâmetros do Escopo</h1>
+            <p class="panel-description">Configure a senioridade, selecione a arquitetura base e descreva as regras do sistema.</p>
+          </div>
+        </header>
+
+        <form id="form-orcamento" class="config-form" novalidate>
+
+          <!-- 1. Templates Rápidos -->
+          <div class="field-section">
+            <div class="field-header">
+              <span class="field-label">Presets de Arquitetura</span>
+              <span class="field-hint">Preenchimento rápido com 1 clique</span>
+            </div>
+            <div class="presets-grid" role="group" aria-label="Templates rápidos de projetos">
+              <button type="button" class="btn-template" data-template="ecommerce">
+                <span class="preset-icon" aria-hidden="true">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <path d="M16 10a4 4 0 0 1-8 0"></path>
+                  </svg>
+                </span>
+                <span class="preset-info">
+                  <span class="preset-name">E-commerce</span>
+                  <span class="preset-meta">Catálogo, carrinho e checkout</span>
+                </span>
+              </button>
+
+              <button type="button" class="btn-template" data-template="dashboard">
+                <span class="preset-icon" aria-hidden="true">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="3" y1="9" x2="21" y2="9"></line>
+                    <line x1="9" y1="21" x2="9" y2="9"></line>
+                  </svg>
+                </span>
+                <span class="preset-info">
+                  <span class="preset-name">Dashboard Logístico</span>
+                  <span class="preset-meta">KPIs, rotas e relatórios</span>
+                </span>
+              </button>
+
+              <button type="button" class="btn-template" data-template="crud">
+                <span class="preset-icon" aria-hidden="true">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="16 18 22 12 16 6"></polyline>
+                    <polyline points="8 6 2 12 8 18"></polyline>
+                  </svg>
+                </span>
+                <span class="preset-info">
+                  <span class="preset-name">API REST CRUD</span>
+                  <span class="preset-meta">Serviços, autenticação e SQL</span>
+                </span>
+              </button>
+            </div>
+          </div>
+
+          <!-- 2. Senioridade e Valor/Hora Unificados -->
+          <div class="field-section">
+            <div class="field-header">
+              <label for="valor-hora" class="field-label">Senioridade e Taxa Horária</label>
+              <span class="field-hint">Selecione uma faixa ou ajuste o valor</span>
+            </div>
+
+            <div class="rate-bar">
+              <div class="seniority-options" role="radiogroup" aria-label="Nível de Senioridade">
+                <button type="button" class="btn-seniority" data-nivel="junior" data-valor="50" role="radio" aria-checked="false">
+                  <span class="seniority-title">Júnior</span>
+                  <span class="seniority-rate">R$ 50</span>
+                </button>
+                <button type="button" class="btn-seniority active" data-nivel="pleno" data-valor="100" role="radio" aria-checked="true">
+                  <span class="seniority-title">Pleno</span>
+                  <span class="seniority-rate">R$ 100</span>
+                </button>
+                <button type="button" class="btn-seniority" data-nivel="senior" data-valor="180" role="radio" aria-checked="false">
+                  <span class="seniority-title">Sênior</span>
+                  <span class="seniority-rate">R$ 180</span>
+                </button>
+              </div>
+
+              <div class="rate-input-box">
+                <span class="input-affix" aria-hidden="true">R$</span>
+                <input
+                  type="number"
+                  id="valor-hora"
+                  name="valor-hora"
+                  class="form-input"
+                  min="10"
+                  max="2000"
+                  step="5"
+                  value="100"
+                  aria-label="Valor personalizado por hora em reais"
+                  required
+                >
+                <span class="input-affix" aria-hidden="true">/h</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. Chips de Stack / Escopo Técnico -->
+          <div class="field-section">
+            <div class="field-header">
+              <span class="field-label">Módulos de Infraestrutura e Stack</span>
+              <span class="field-hint">Adicione componentes ao escopo</span>
+            </div>
+            <div class="chips-container" role="group" aria-label="Módulos técnicos recomendados">
+              <button type="button" class="chip" data-chip="API REST" aria-pressed="false">
+                <svg class="chip-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <line class="icon-plus-v" x1="12" y1="5" x2="12" y2="19"></line>
+                  <line class="icon-plus-h" x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline class="icon-check" points="20 6 9 17 4 12"></polyline>
+                </svg>
+                <span>API REST</span>
+              </button>
+
+              <button type="button" class="chip" data-chip="Banco de Dados SQL" aria-pressed="false">
+                <svg class="chip-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <line class="icon-plus-v" x1="12" y1="5" x2="12" y2="19"></line>
+                  <line class="icon-plus-h" x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline class="icon-check" points="20 6 9 17 4 12"></polyline>
+                </svg>
+                <span>Banco de Dados SQL</span>
+              </button>
+
+              <button type="button" class="chip" data-chip="Painel Web/Dashboard" aria-pressed="false">
+                <svg class="chip-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <line class="icon-plus-v" x1="12" y1="5" x2="12" y2="19"></line>
+                  <line class="icon-plus-h" x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline class="icon-check" points="20 6 9 17 4 12"></polyline>
+                </svg>
+                <span>Painel Web/Dashboard</span>
+              </button>
+
+              <button type="button" class="chip" data-chip="Autenticação/JWT" aria-pressed="false">
+                <svg class="chip-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <line class="icon-plus-v" x1="12" y1="5" x2="12" y2="19"></line>
+                  <line class="icon-plus-h" x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline class="icon-check" points="20 6 9 17 4 12"></polyline>
+                </svg>
+                <span>Autenticação/JWT</span>
+              </button>
+
+              <button type="button" class="chip" data-chip="Docker/Deploy" aria-pressed="false">
+                <svg class="chip-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <line class="icon-plus-v" x1="12" y1="5" x2="12" y2="19"></line>
+                  <line class="icon-plus-h" x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline class="icon-check" points="20 6 9 17 4 12"></polyline>
+                </svg>
+                <span>Docker/Deploy</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- 4. Especificação do Projeto -->
+          <div class="field-section">
+            <div class="field-header">
+              <label for="descricao-projeto" class="field-label">Especificação Funcional e Regras de Negócio</label>
+              <span id="char-counter" class="char-counter">0 / 2000</span>
+            </div>
+
+            <div class="editor-wrapper">
+              <textarea
+                id="descricao-projeto"
+                name="descricao-projeto"
+                class="form-textarea"
+                rows="5"
+                maxlength="2000"
+                placeholder="Descreva os fluxos principais, integrações externas, perfis de acesso e entregáveis esperados..."
+                required
+              ></textarea>
+            </div>
+
+            <div id="erro-validacao" class="msg-alerta msg-alerta-erro" role="alert" hidden></div>
+          </div>
+
+          <!-- 5. Ação Principal -->
+          <div class="form-actions">
+            <button type="submit" id="btn-calcular" class="btn-primary">
+              <span id="btn-calcular-texto">Calcular Estimativa e WBS</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </button>
+          </div>
+
+        </form>
+      </section>
+
+      <!-- Painel Direito: Proposta Técnica e Histórico -->
+      <div class="results-column">
+
+        <!-- Estado Vazio -->
+        <section id="estado-vazio" class="panel empty-panel" aria-label="Aguardando Estimativa">
+          <div class="empty-blueprint">
+            <div class="blueprint-icon" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+                <line x1="3" y1="9" x2="21" y2="9"></line>
+                <line x1="9" y1="21" x2="9" y2="9"></line>
+              </svg>
+            </div>
+            <h2 class="empty-title">Nenhuma proposta gerada</h2>
+            <p class="empty-text">Defina os parâmetros ao lado ou selecione um preset de arquitetura para decompor os módulos técnicos e calcular o orçamento.</p>
+
+            <div class="blueprint-steps" aria-hidden="true">
+              <div class="blueprint-step">
+                <span class="step-index">01</span>
+                <span class="step-name">Decomposição WBS via IA</span>
+              </div>
+              <div class="blueprint-step">
+                <span class="step-index">02</span>
+                <span class="step-name">Cálculo Determinístico (+20%)</span>
+              </div>
+              <div class="blueprint-step">
+                <span class="step-index">03</span>
+                <span class="step-name">Conversão Cambial USD-BRL</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Estado de Carregamento -->
+        <section id="estado-loading" class="panel loading-panel" aria-label="Gerando Orçamento" hidden>
+          <div class="loading-content">
+            <div class="spinner" aria-hidden="true"></div>
+            <h2 id="loading-mensagem" class="loading-title">Estruturando módulos e calculando custos...</h2>
+            <p class="loading-subtitle">Consultando modelo Gemini 2.5 Flash e cotação comercial USD-BRL</p>
+          </div>
+        </section>
+
+        <!-- Proposta Técnica Gerada -->
+        <section id="secao-resultado" class="panel result-panel" aria-labelledby="res-nome-projeto" hidden>
+
+          <!-- Banner de Contingência (Plano B) -->
+          <div id="banner-fallback" class="banner-alerta" role="status" hidden>
+            <svg class="banner-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+              <line x1="12" y1="9" x2="12" y2="13"></line>
+              <line x1="12" y1="17" x2="12.01" y2="17"></line>
+            </svg>
+            <div class="banner-content">
+              <strong>Modo de Contingência Local Ativo</strong>
+              <span id="banner-fallback-motivo">A API externa não respondeu ou a chave não foi configurada. Estimativa gerada pelo motor local determinístico.</span>
+            </div>
+          </div>
+
+          <header class="proposal-header">
+            <div class="proposal-title-group">
+              <span class="proposal-kicker">Proposta Técnica e Comercial</span>
+              <h2 id="res-nome-projeto" class="proposal-title">Nome do Sistema</h2>
+            </div>
+            <div class="exchange-pill" title="Cotação comercial USD-BRL">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="2" y1="12" x2="22" y2="12"></line>
+                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+              </svg>
+              <span>USD/BRL:</span>
+              <strong id="res-cotacao-usd">R$ --</strong>
+            </div>
+          </header>
+
+          <p id="res-descricao" class="proposal-summary">Resumo técnico da arquitetura proposta.</p>
+
+          <!-- Painel Financeiro Principal -->
+          <div class="financial-board">
+            <div class="financial-primary">
+              <div class="financial-hero financial-hero-brl">
+                <span class="metric-label">Investimento Final (BRL)</span>
+                <strong id="res-total-final-brl" class="hero-value">R$ 0,00</strong>
+                <span class="metric-caption">Inclui margem de segurança de +20%</span>
+              </div>
+              <div class="financial-hero financial-hero-usd">
+                <span class="metric-label">Equivalente Internacional (USD)</span>
+                <strong id="res-total-final-usd" class="hero-value">US$ 0.00</strong>
+                <span class="metric-caption">Conversão direta pelo câmbio atual</span>
+              </div>
+            </div>
+
+            <div class="financial-breakdown">
+              <div class="breakdown-cell">
+                <span class="metric-label">Esforço Total</span>
+                <strong id="res-total-horas" class="breakdown-value">0 h</strong>
+                <span class="metric-caption">Soma inteira do WBS</span>
+              </div>
+              <div class="breakdown-cell">
+                <span class="metric-label">Custo Base</span>
+                <strong id="res-custo-base" class="breakdown-value">R$ 0,00</strong>
+                <span id="res-detalhe-taxa" class="metric-caption">0h × R$ 0/h</span>
+              </div>
+              <div class="breakdown-cell">
+                <span class="metric-label">Margem (+20%)</span>
+                <strong id="res-margem-seguranca" class="breakdown-value">R$ 0,00</strong>
+                <span class="metric-caption">Reserva técnica</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tabela WBS -->
+          <div class="wbs-section">
+            <div class="wbs-header">
+              <h3 class="wbs-title">Estrutura Analítica do Projeto (WBS)</h3>
+              <span class="wbs-caption">Esforço estimado por módulo</span>
+            </div>
+            <div class="table-container">
+              <table class="wbs-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Módulo / Entregável Técnico</th>
+                    <th scope="col" class="text-center">Complexidade</th>
+                    <th scope="col" class="text-right">Esforço</th>
+                  </tr>
+                </thead>
+                <tbody id="lista-modulos-corpo">
+                  <!-- Preenchido via template-modulo-linha -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <footer class="proposal-actions">
+            <button type="button" id="btn-salvar-orcamento" class="btn-secondary">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+              </svg>
+              <span>Salvar no Histórico</span>
+            </button>
+            <button type="button" id="btn-novo-calculo" class="btn-ghost">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="1 4 1 10 7 10"></polyline>
+                <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+              </svg>
+              <span>Limpar / Novo</span>
+            </button>
+          </footer>
+        </section>
+
+        <!-- Histórico de Orçamentos -->
+        <section id="secao-historico" class="panel history-panel" aria-labelledby="titulo-historico">
+          <header class="history-header">
+            <div class="history-title-group">
+              <h2 id="titulo-historico" class="panel-title-sm">Histórico de Estimativas</h2>
+              <span id="historico-contador" class="counter-badge">0</span>
+            </div>
+            <button type="button" id="btn-limpar-historico" class="btn-text-danger" hidden>
+              Limpar histórico
+            </button>
+          </header>
+
+          <div id="historico-lista" class="history-list" aria-live="polite">
+            <p id="historico-vazio" class="history-empty-text">Nenhuma estimativa salva neste navegador.</p>
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- Templates HTML5 para Inserção DOM Segura (Sem innerHTML) -->
+  <template id="template-modulo-linha">
+    <tr>
+      <td class="modulo-nome"></td>
+      <td class="text-center">
+        <span class="badge-complexidade"></span>
+      </td>
+      <td class="text-right tabular-nums modulo-horas"></td>
+    </tr>
+  </template>
+
+  <template id="template-historico-item">
+    <article class="history-item">
+      <div class="history-item-content">
+        <div class="history-item-top">
+          <h3 class="history-item-title"></h3>
+          <span class="history-item-date tabular-nums"></span>
+        </div>
+        <p class="history-item-summary"></p>
+        <div class="history-item-badges tabular-nums">
+          <span class="history-badge-hours"></span>
+          <span class="history-badge-brl"></span>
+          <span class="history-badge-usd"></span>
+        </div>
+      </div>
+      <div class="history-item-actions">
+        <button type="button" class="btn-historico-carregar btn-icon-action" title="Visualizar orçamento">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+            <circle cx="12" cy="12" r="3"></circle>
+          </svg>
+          <span>Abrir</span>
+        </button>
+        <button type="button" class="btn-historico-excluir btn-icon-action btn-icon-danger" title="Remover do histórico">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="3 6 5 6 21 6"></polyline>
+            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+          </svg>
+          <span>Excluir</span>
+        </button>
+      </div>
+    </article>
+  </template>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
