@@ -1,15 +1,15 @@
 /**
- * FreelaScope AI — Modelo Público de Configuração
+ * FreelaScope AI — Modelo Público de Configuração de IA
  *
  * INSTRUÇÕES:
  * 1. Copie este arquivo e renomeie a cópia para "config.js" no mesmo diretório (js/config.js).
- * 2. O arquivo "js/config.js" já está listado no .gitignore e NUNCA será versionado.
- * 3. Obtenha sua chave gratuita em: https://aistudio.google.com/app/apikey
- * 4. Insira sua chave abaixo na variável GEMINI_API_KEY.
+ * 2. O arquivo "js/config.js" está listado no .gitignore e nunca será versionado.
+ * 3. Defina abaixo a URL do endpoint, o identificador do modelo e a sua chave de API.
  *
- * NOTA DE SEGURANÇA:
- * Se este arquivo permanecer vazio ("") ou não for copiado para config.js,
- * a aplicação continuará funcionando normalmente através do motor de contingência (js/fallback.js).
+ * Caso os campos estejam vazios ou o arquivo config.js não exista,
+ * a aplicação acionará automaticamente o motor de contingência local (js/fallback.js).
  */
 
-export const GEMINI_API_KEY = "";
+export const AI_API_URL = "https://api.groq.com/openai/v1/chat/completions";
+export const AI_MODEL = "openai/gpt-oss-120b";
+export const AI_API_KEY = "";
