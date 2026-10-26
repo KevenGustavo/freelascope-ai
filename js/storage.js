@@ -3,8 +3,8 @@
  * Gerenciamento de Persistência Local (localStorage)
  *
  * Armazena e recupera o histórico de orçamentos gerados,
- * garantindo integridade de dados e proteção defensiva contra
- * JSON corrompido ou indisponibilidade de armazenamento no navegador.
+ * garantindo integridade de dados, deduplicação canônica e proteção defensiva
+ * contra JSON corrompido ou indisponibilidade de armazenamento no navegador.
  */
 
 const STORAGE_KEY = "freelascope_historico_v1";
@@ -24,6 +24,57 @@ function gerarIdUnico() {
 }
 
 /**
+ * Gera uma assinatura canônica determinística para um orçamento.
+ * Usada para detectar duplicatas mesmo se o ID for diferente.
+ *
+ * @param {Object} dados
+ * @returns {string}
+ */
+export function gerarAssinaturaOrcamento(dados) {
+  if (!dados || typeof dados !== "object") return "";
+
+  const nome = String(dados.nomeProjeto || "").trim().toLowerCase();
+  const valorHora = Number(dados?.calculo?.valorHora || dados?.valorHora || 0);
+  const totalHoras = Number(dados?.calculo?.totalHoras || dados?.totalHoras || 0);
+  const totalFinalBRL = Number(dados?.calculo?.totalFinalBRL || dados?.totalFinalBRL || 0);
+
+  const modulos = Array.isArray(dados?.calculo?.modulos)
+    ? dados.calculo.modulos
+    : (Array.isArray(dados?.modulos) ? dados.modulos : []);
+
+  const modulosSig = modulos
+    .map(m => `${String(m.modulo || "").trim().toLowerCase()}:${Number(m.horas || 0)}`)
+    .sort()
+    .join(";");
+
+  return `${nome}|${valorHora}|${totalHoras}|${totalFinalBRL}|${modulosSig}`;
+}
+
+/**
+ * Verifica se uma estimativa já está persistida no histórico (por ID ou assinatura canônica).
+ *
+ * @param {Object} dados
+ * @returns {Object|null} Retorna o registro existente caso encontrado, ou null
+ */
+export function buscarOrcamentoDuplicado(dados) {
+  if (!dados || typeof dados !== "object") return null;
+
+  const historico = obterHistorico();
+
+  // 1. Verificação por ID
+  if (dados.id) {
+    const porId = historico.find(item => item.id === dados.id);
+    if (porId) return porId;
+  }
+
+  // 2. Verificação por assinatura canônica
+  const assinaturaAlvo = gerarAssinaturaOrcamento(dados);
+  if (!assinaturaAlvo) return null;
+
+  return historico.find(item => gerarAssinaturaOrcamento(item) === assinaturaAlvo) || null;
+}
+
+/**
  * Obtém a lista completa de orçamentos salvos no localStorage.
  * Retorna sempre um Array (vazio em caso de erro ou ausência de dados).
  *
@@ -39,7 +90,6 @@ export function obterHistorico() {
     const lista = JSON.parse(dadosRaw);
     if (!Array.isArray(lista)) return [];
 
-    // Filtra apenas registros que possuam a estrutura mínima esperada
     return lista.filter(item => item && typeof item === "object" && item.id && item.nomeProjeto);
   } catch (erro) {
     console.warn("[Storage] Falha ao recuperar histórico do localStorage:", erro);
@@ -48,7 +98,8 @@ export function obterHistorico() {
 }
 
 /**
- * Salva um novo orçamento no topo do histórico (LIFO).
+ * Salva um novo orçamento no topo do histórico (LIFO) com verificação de duplicatas.
+ * Caso a estimativa já exista no histórico, retorna o registro já salvo sem duplicar.
  *
  * @param {Object} dados
  * @param {string} dados.nomeProjeto
@@ -65,6 +116,12 @@ export function salvarOrcamento(dados) {
     return null;
   }
 
+  // Bloqueio de duplicatas: se já existir com a mesma assinatura ou ID, retorna o existente
+  const existente = buscarOrcamentoDuplicado(dados);
+  if (existente) {
+    return existente;
+  }
+
   const historicoAtual = obterHistorico();
 
   const novoRegistro = {
@@ -78,10 +135,7 @@ export function salvarOrcamento(dados) {
     usouFallback: Boolean(dados.usouFallback)
   };
 
-  // Se já existir com o mesmo id, remove a ocorrência anterior para atualizar no topo
   const historicoFiltrado = historicoAtual.filter(item => item.id !== novoRegistro.id);
-
-  // Adiciona no topo e respeita o limite máximo de armazenamento
   const novoHistorico = [novoRegistro, ...historicoFiltrado].slice(0, LIMITE_MAX_HISTORICO);
 
   try {
@@ -133,7 +187,7 @@ export function removerOrcamento(id) {
 /**
  * Remove completamente todo o histórico de orçamentos salvos.
  *
- * @returns {boolean} Verdadeiro se a limpeza foi concluída com sucesso
+ * @returns {boolean}
  */
 export function limparHistorico() {
   try {
@@ -146,4 +200,3 @@ export function limparHistorico() {
     return false;
   }
 }
-

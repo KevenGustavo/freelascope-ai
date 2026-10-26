@@ -1,9 +1,9 @@
 /**
  * FreelaScope AI — js/fallback.js
- * Motor de Contingência (Plano B) e Presets de Projeto
+ * Motor de Contingência (Plano B) e Presets de Desenvolvimento Web & Software
  *
  * Atua de forma 100% determinística e offline caso a API externa
- * (Gemini AI ou AwesomeAPI) esteja indisponível, sem chave de API
+ * (IA ou AwesomeAPI) esteja indisponível, sem chave de API
  * ou com erro de conexão.
  */
 
@@ -14,61 +14,119 @@
 export const COTACAO_USD_FALLBACK = 5.75;
 
 /**
- * Definição dos 3 Presets Rápidos de 1 clique
+ * Definição dos 3 Templates Rápidos de Aplicações Web / Software
  */
 export const PRESETS_PROJETO = {
   ecommerce: {
     id: "ecommerce",
-    titulo: "Plataforma de E-commerce B2C",
+    titulo: "Plataforma de E-commerce Web B2C",
     senioridade: "pleno",
     valorHora: 100,
-    chips: ["API REST", "Banco de Dados SQL", "Painel Web/Dashboard", "Autenticação/JWT"],
-    descricao: "Desenvolvimento de plataforma de e-commerce completa, incluindo catálogo de produtos categorizado, busca textual com filtros, carrinho persistente, checkout seguro integrado a gateway de pagamento (Pix e Cartão de Crédito) e painel administrativo para controle de estoque e pedidos."
+    chips: [
+      "Landing Page / UI Responsiva",
+      "Painel Web/Dashboard",
+      "API REST",
+      "Banco de Dados SQL",
+      "Autenticação/JWT",
+      "Gateway de Pagamento",
+      "Upload / Cloud Storage"
+    ],
+    descricao: "Desenvolvimento de aplicação web de e-commerce completa: vitrine responsiva com busca e filtros, carrinho persistente, checkout transparente integrado a gateway de pagamento (Pix e Cartão via webhook), upload de fotos de produtos em Cloud Storage e painel administrativo de pedidos e estoque."
   },
   dashboard: {
     id: "dashboard",
-    titulo: "Dashboard de Gestão e Telemetria",
+    titulo: "Sistema SaaS & Dashboard Analítico",
     senioridade: "senior",
     valorHora: 180,
-    chips: ["API REST", "Banco de Dados SQL", "Painel Web/Dashboard", "Docker/Deploy"],
-    descricao: "Painel analítico para consolidação e monitoramento operacional em tempo real. Inclui ingestão de eventos, cálculo de indicadores de desempenho (KPIs), visualização em gráficos analíticos, filtros por período e filial, exportação de relatórios em PDF/CSV e alertas automáticos."
+    chips: [
+      "Painel Web/Dashboard",
+      "API REST",
+      "Banco de Dados SQL",
+      "NoSQL / Cache Redis",
+      "Autenticação/JWT",
+      "Tempo Real / WebSockets",
+      "Docker/Deploy"
+    ],
+    descricao: "Aplicação web SaaS com painel analítico (SPA) para monitoramento operacional em tempo real via WebSockets. Inclui agregação de métricas e KPIs com cache Redis, visualização em gráficos interativos, controle de acesso multi-tenant (RBAC), exportação de relatórios CSV/PDF e deploy conteinerizado."
   },
   crud: {
     id: "crud",
-    titulo: "Serviço Backend API RESTful",
+    titulo: "Backend & API RESTful Corporativa",
     senioridade: "pleno",
     valorHora: 100,
-    chips: ["API REST", "Banco de Dados SQL", "Autenticação/JWT", "Docker/Deploy"],
-    descricao: "Arquitetura backend para serviços corporativos com operações CRUD completas, padronização RESTful, autenticação e autorização via tokens JWT (RBAC), validação defensiva de payloads, migrações de banco relacional e documentação interativa via OpenAPI/Swagger."
+    chips: [
+      "API REST",
+      "Banco de Dados SQL",
+      "Autenticação/JWT",
+      "Mensageria / E-mail & WhatsApp",
+      "Testes Automatizados",
+      "Docker/Deploy"
+    ],
+    descricao: "Arquitetura de software backend com API RESTful padronizada em camadas, operações CRUD completas, autenticação JWT e controle de permissões (RBAC), migrations em banco de dados SQL, disparo transacional de notificações por e-mail/WhatsApp, testes automatizados de integração e container Docker."
   }
 };
 
 /**
- * Módulos técnicos mapeados para injeção dinâmica baseada nos chips de stack selecionados
+ * Módulos técnicos mapeados para todos os chips de arquitetura, stack e infraestrutura
  */
 const MODULOS_STACK_CHIPS = {
-  "API REST": {
-    modulo: "Camada de Serviços e Endpoints API REST",
+  "Landing Page / UI Responsiva": {
+    modulo: "Desenvolvimento Frontend e Interface Web Responsiva (HTML/CSS/JS)",
     horas: 10,
     complexidade: "Média"
   },
+  "Painel Web/Dashboard": {
+    modulo: "Aplicação Web (SPA), Painel Administrativo e Visualização de Dados",
+    horas: 14,
+    complexidade: "Alta"
+  },
+  "API REST": {
+    modulo: "Arquitetura Backend, Rotas HTTP e Endpoints API RESTful",
+    horas: 12,
+    complexidade: "Média"
+  },
   "Banco de Dados SQL": {
-    modulo: "Modelagem Relacional, Migrações e Índices SQL",
+    modulo: "Modelagem Relacional SQL, Migrations, Índices e Queries",
+    horas: 8,
+    complexidade: "Média"
+  },
+  "NoSQL / Cache Redis": {
+    modulo: "Camada de Cache em Memória (Redis) e Persistência NoSQL",
     horas: 6,
     complexidade: "Média"
   },
-  "Painel Web/Dashboard": {
-    modulo: "Interface Web Responsiva e Telas de Gestão",
+  "Autenticação/JWT": {
+    modulo: "Segurança, Autenticação JWT/OAuth2 e Controle de Acesso (RBAC)",
+    horas: 8,
+    complexidade: "Média"
+  },
+  "Gateway de Pagamento": {
+    modulo: "Integração com Gateway de Pagamento (Pix/Stripe) e Webhooks",
     horas: 12,
     complexidade: "Alta"
   },
-  "Autenticação/JWT": {
-    modulo: "Segurança, Autenticação JWT e Controle de Acesso (RBAC)",
+  "Tempo Real / WebSockets": {
+    modulo: "Servidor de Eventos em Tempo Real (WebSockets / Notificações)",
+    horas: 10,
+    complexidade: "Alta"
+  },
+  "Upload / Cloud Storage": {
+    modulo: "Serviço de Upload de Arquivos e Integração Cloud Storage (S3/R2)",
+    horas: 6,
+    complexidade: "Baixa"
+  },
+  "Mensageria / E-mail & WhatsApp": {
+    modulo: "Serviço de Mensageria Transacional (E-mail SMTP e API WhatsApp)",
+    horas: 8,
+    complexidade: "Média"
+  },
+  "Testes Automatizados": {
+    modulo: "Suíte de Testes Unitários, Integração de API e Homologação",
     horas: 8,
     complexidade: "Média"
   },
   "Docker/Deploy": {
-    modulo: "Conteinerização Docker e Pipeline de Implantação CI/CD",
+    modulo: "Conteinerização Docker, Configuração Cloud e Pipeline CI/CD",
     horas: 6,
     complexidade: "Baixa"
   }
@@ -86,71 +144,67 @@ export function gerarEscopoFallback(descricao = "", chipsSelecionados = []) {
   const textoLimpo = (descricao || "").trim().toLowerCase();
   const chips = Array.isArray(chipsSelecionados) ? chipsSelecionados : [];
 
-  let nomeProjeto = "Sistema Web Sob Medida";
-  let descricaoResumida = "Arquitetura modular em camadas orientada aos requisitos técnicos informados.";
+  let nomeProjeto = "Aplicação Web Sob Medida";
+  let descricaoResumida = "Arquitetura de software modular em camadas orientada aos requisitos técnicos e de negócio informados.";
   let modulosBase = [];
 
   // 1. Identificação contextual por palavras-chave ou presets
-  if (textoLimpo.includes("commerce") || textoLimpo.includes("loja") || textoLimpo.includes("carrinho") || textoLimpo.includes("pagamento")) {
-    nomeProjeto = "Plataforma de E-commerce e Checkout";
-    descricaoResumida = "Arquitetura com catálogo de produtos, controle de sessão de compras, checkout transacional e integração financeira.";
+  if (textoLimpo.includes("commerce") || textoLimpo.includes("loja") || textoLimpo.includes("carrinho") || textoLimpo.includes("vitrine")) {
+    nomeProjeto = "Plataforma Web de E-commerce e Checkout";
+    descricaoResumida = "Aplicação web com catálogo de produtos, gestão de carrinho, checkout transacional e painel administrativo.";
     modulosBase = [
-      { modulo: "Modelagem de Catálogo e Produtos", horas: 8, complexidade: "Média" },
-      { modulo: "Fluxo de Carrinho e Checkout Transacional", horas: 12, complexidade: "Alta" },
-      { modulo: "Integração de Pagamentos (Pix / Cartão)", horas: 10, complexidade: "Alta" },
-      { modulo: "Painel de Administração de Pedidos", horas: 8, complexidade: "Média" }
+      { modulo: "Modelagem de Catálogo, Produtos e Estoque", horas: 8, complexidade: "Média" },
+      { modulo: "Fluxo de Carrinho e Checkout Transacional", horas: 12, complexidade: "Alta" }
     ];
-  } else if (textoLimpo.includes("dashboard") || textoLimpo.includes("logístic") || textoLimpo.includes("telemetria") || textoLimpo.includes("painel") || textoLimpo.includes("relatório")) {
-    nomeProjeto = "Dashboard Analítico e Operacional";
-    descricaoResumida = "Sistema para consolidação de métricas, visualização de dados operacionais e relatórios gerenciais.";
+  } else if (textoLimpo.includes("dashboard") || textoLimpo.includes("saas") || textoLimpo.includes("telemetria") || textoLimpo.includes("painel") || textoLimpo.includes("relatório")) {
+    nomeProjeto = "Sistema Web SaaS e Dashboard Analítico";
+    descricaoResumida = "Aplicação web para consolidação de indicadores operacionais, visualização de métricas e gestão multi-usuário.";
     modulosBase = [
-      { modulo: "Pipeline de Agregação de Indicadores e KPIs", horas: 8, complexidade: "Média" },
-      { modulo: "Interface Analítica e Visualização em Gráficos", horas: 12, complexidade: "Alta" },
-      { modulo: "Módulo de Filtros Parametrizados e Exportação", horas: 6, complexidade: "Baixa" },
-      { modulo: "Controle de Acessos e Perfis de Gestão", horas: 6, complexidade: "Média" }
+      { modulo: "Motor de Agregação de Indicadores e Regras de Negócio", horas: 10, complexidade: "Média" },
+      { modulo: "Módulo de Filtros Avançados e Exportação de Relatórios", horas: 8, complexidade: "Média" }
     ];
   } else if (textoLimpo.includes("crud") || textoLimpo.includes("api rest") || textoLimpo.includes("backend") || textoLimpo.includes("microsserviço")) {
-    nomeProjeto = "API RESTful e Serviços de Backend";
-    descricaoResumida = "Serviço de backend em arquitetura limpa com persistência relacional, validação de dados e segurança de endpoints.";
+    nomeProjeto = "Serviço Backend e API RESTful";
+    descricaoResumida = "Arquitetura de software backend com persistência relacional, validação de payloads e documentação OpenAPI.";
     modulosBase = [
-      { modulo: "Estruturação de Camadas e Regras de Negócio", horas: 8, complexidade: "Média" },
-      { modulo: "Implementação de Endpoints CRUD e Validações", horas: 10, complexidade: "Média" },
-      { modulo: "Autenticação Segura e Políticas de Autorização", horas: 6, complexidade: "Média" },
-      { modulo: "Documentação OpenAPI e Testes Automatizados", horas: 6, complexidade: "Baixa" }
+      { modulo: "Estruturação de Camadas, Domínio e Regras de Negócio", horas: 10, complexidade: "Média" },
+      { modulo: "Documentação Técnica OpenAPI/Swagger e Padronização de Erros", horas: 4, complexidade: "Baixa" }
     ];
   } else {
-    // Escopo geral adaptativo
-    const primeiraLinha = (descricao || "").trim().split("\n")[0].slice(0, 40);
+    const primeiraLinha = (descricao || "").trim().split("\n")[0].slice(0, 45);
     if (primeiraLinha.length >= 5) {
-      nomeProjeto = `Sistema: ${primeiraLinha}`;
+      nomeProjeto = `Sistema Web: ${primeiraLinha}`;
     }
     descricaoResumida = (descricao && descricao.length > 10)
-      ? `Arquitetura sob medida cobrindo o escopo informado: ${descricao.slice(0, 110)}...`
-      : "Solução de software estruturada em componentes independentes para garantir escalabilidade e manutenção simples.";
+      ? `Arquitetura de software sob medida para o escopo: ${descricao.slice(0, 115)}...`
+      : "Aplicação web estruturada em camadas desacopladas (Frontend, Backend API e Persistência) com foco em manutenibilidade.";
 
     modulosBase = [
-      { modulo: "Especificação Técnica e Arquitetura Base", horas: 6, complexidade: "Baixa" },
-      { modulo: "Desenvolvimento do Núcleo de Regras de Negócio", horas: 14, complexidade: "Alta" },
-      { modulo: "Camada de Apresentação e Interação", horas: 10, complexidade: "Média" },
-      { modulo: "Testes de Integração e Homologação", horas: 6, complexidade: "Média" }
+      { modulo: "Arquitetura de Software e Configuração do Ambiente", horas: 6, complexidade: "Baixa" },
+      { modulo: "Desenvolvimento do Núcleo de Regras de Negócio", horas: 14, complexidade: "Alta" }
     ];
   }
 
-  // 2. Incorporação dinâmica dos chips de stack selecionados (sem duplicatas)
+  // 2. Incorporação dinâmica de todos os chips de stack selecionados pelo desenvolvedor
   const modulosFinais = [...modulosBase];
 
   for (const chip of chips) {
     const moduloDef = MODULOS_STACK_CHIPS[chip];
     if (!moduloDef) continue;
 
-    const jaExiste = modulosFinais.some(m =>
-      m.modulo.toLowerCase().includes(chip.toLowerCase()) ||
-      chip.toLowerCase().includes(m.modulo.toLowerCase().split(" ")[0])
-    );
-
+    const jaExiste = modulosFinais.some(m => m.modulo === moduloDef.modulo);
     if (!jaExiste) {
       modulosFinais.push({ ...moduloDef });
     }
+  }
+
+  // Caso nenhum chip tenha sido selecionado, adiciona entregáveis essenciais de um projeto web
+  if (modulosFinais.length < 4) {
+    modulosFinais.push(
+      { modulo: "Interface Web Responsiva e Componentes de UI", horas: 10, complexidade: "Média" },
+      { modulo: "Modelagem de Dados e Integração com API", horas: 8, complexidade: "Média" },
+      { modulo: "Testes de Homologação e Deploy em Produção", horas: 6, complexidade: "Baixa" }
+    );
   }
 
   return {
@@ -159,4 +213,3 @@ export function gerarEscopoFallback(descricao = "", chipsSelecionados = []) {
     modulos: modulosFinais
   };
 }
-

@@ -4,8 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; connect-src 'self' https:; img-src 'self' data:; object-src 'none'; base-uri 'self';">
-  <meta name="description" content="FreelaScope AI — Estimativa técnica de escopo (WBS) e precificação de projetos de software.">
-  <title>FreelaScope — Estimativa Técnica e Precificação</title>
+  <meta name="description" content="FreelaScope AI — Calculadora de escopo técnico (WBS) e orçamento para projetos de Desenvolvimento Web e Engenharia de Software.">
+  <title>FreelaScope — Orçamento e Escopo para Projetos Web & Software</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -13,16 +14,21 @@
     <div class="header-container">
       <div class="brand">
         <div class="brand-mark" aria-hidden="true">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
-            <polyline points="2 17 12 22 22 17"></polyline>
-            <polyline points="2 12 12 17 22 12"></polyline>
+          <svg width="20" height="20" viewBox="0 0 32 32" fill="none">
+            <path d="M5 10V7C5 5.89543 5.89543 5 7 5H10" stroke="#3b82f6" stroke-width="2.2" stroke-linecap="round"/>
+            <path d="M22 5H25C26.1046 5 27 5.89543 27 7V10" stroke="#3b82f6" stroke-width="2.2" stroke-linecap="round"/>
+            <path d="M5 22V25C5 26.1046 5.89543 27 7 27H10" stroke="#3b82f6" stroke-width="2.2" stroke-linecap="round"/>
+            <path d="M22 27H25C26.1046 27 27 26.1046 27 25V22" stroke="#3b82f6" stroke-width="2.2" stroke-linecap="round"/>
+            <rect x="10" y="9.5" width="12" height="3.2" rx="1.2" fill="#fafafa"/>
+            <rect x="10" y="14.6" width="8" height="3.2" rx="1.2" fill="#60a5fa"/>
+            <rect x="10" y="19.7" width="4.2" height="3.2" rx="1.2" fill="#fafafa"/>
+            <circle cx="20.5" cy="21.3" r="2" fill="#10b981"/>
           </svg>
         </div>
         <div class="brand-text">
           <span class="brand-title">FreelaScope</span>
           <span class="brand-divider" aria-hidden="true">/</span>
-          <span class="brand-subtitle">Workbench de Estimativa Técnica</span>
+          <span class="brand-subtitle">Calculadora de Escopo para Desenvolvimento Web & Software</span>
         </div>
       </div>
 
@@ -42,8 +48,8 @@
       <section class="panel panel-config" aria-labelledby="titulo-config">
         <header class="panel-header">
           <div>
-            <h1 id="titulo-config" class="panel-title">Parâmetros do Escopo</h1>
-            <p class="panel-description">Configure a senioridade, selecione a arquitetura base e descreva as regras do sistema.</p>
+            <h1 id="titulo-config" class="panel-title">Escopo do Projeto Web / Software</h1>
+            <p class="panel-description">Defina sua senioridade como desenvolvedor, selecione os módulos de arquitetura da stack e especifique os requisitos funcionais do sistema.</p>
           </div>
         </header>
 
@@ -52,7 +58,7 @@
           <!-- 1. Templates Rápidos -->
           <div class="field-section">
             <div class="field-header">
-              <span class="field-label">Presets de Arquitetura</span>
+              <span class="field-label">Templates de Aplicações Web</span>
               <span class="field-hint">Preenchimento rápido com 1 clique</span>
             </div>
             <div class="presets-grid" role="group" aria-label="Templates rápidos de projetos">
@@ -65,8 +71,8 @@
                   </svg>
                 </span>
                 <span class="preset-info">
-                  <span class="preset-name">E-commerce</span>
-                  <span class="preset-meta">Catálogo, carrinho e checkout</span>
+                  <span class="preset-name">E-commerce Web</span>
+                  <span class="preset-meta">Catálogo, checkout e Pix/Stripe</span>
                 </span>
               </button>
 
@@ -79,8 +85,8 @@
                   </svg>
                 </span>
                 <span class="preset-info">
-                  <span class="preset-name">Dashboard Logístico</span>
-                  <span class="preset-meta">KPIs, rotas e relatórios</span>
+                  <span class="preset-name">SaaS / Dashboard</span>
+                  <span class="preset-meta">Painel SPA, métricas e relatórios</span>
                 </span>
               </button>
 
@@ -92,8 +98,8 @@
                   </svg>
                 </span>
                 <span class="preset-info">
-                  <span class="preset-name">API REST CRUD</span>
-                  <span class="preset-meta">Serviços, autenticação e SQL</span>
+                  <span class="preset-name">Backend & API REST</span>
+                  <span class="preset-meta">Microsserviço, JWT, SQL e Docker</span>
                 </span>
               </button>
             </div>
@@ -102,23 +108,23 @@
           <!-- 2. Senioridade e Valor/Hora Unificados -->
           <div class="field-section">
             <div class="field-header">
-              <label for="valor-hora" class="field-label">Senioridade e Taxa Horária</label>
-              <span class="field-hint">Selecione uma faixa ou ajuste o valor</span>
+              <label for="valor-hora" class="field-label">Senioridade do Desenvolvedor e Valor/Hora</label>
+              <span class="field-hint">Selecione uma faixa ou personalize</span>
             </div>
 
             <div class="rate-bar">
               <div class="seniority-options" role="radiogroup" aria-label="Nível de Senioridade">
                 <button type="button" class="btn-seniority" data-nivel="junior" data-valor="50" role="radio" aria-checked="false">
-                  <span class="seniority-title">Júnior</span>
-                  <span class="seniority-rate">R$ 50</span>
+                  <span class="seniority-title">Dev Júnior</span>
+                  <span class="seniority-rate">R$ 50/h</span>
                 </button>
                 <button type="button" class="btn-seniority active" data-nivel="pleno" data-valor="100" role="radio" aria-checked="true">
-                  <span class="seniority-title">Pleno</span>
-                  <span class="seniority-rate">R$ 100</span>
+                  <span class="seniority-title">Dev Pleno</span>
+                  <span class="seniority-rate">R$ 100/h</span>
                 </button>
                 <button type="button" class="btn-seniority" data-nivel="senior" data-valor="180" role="radio" aria-checked="false">
-                  <span class="seniority-title">Sênior</span>
-                  <span class="seniority-rate">R$ 180</span>
+                  <span class="seniority-title">Dev Sênior</span>
+                  <span class="seniority-rate">R$ 180/h</span>
                 </button>
               </div>
 
@@ -144,29 +150,20 @@
           <!-- 3. Chips de Stack / Escopo Técnico -->
           <div class="field-section">
             <div class="field-header">
-              <span class="field-label">Módulos de Infraestrutura e Stack</span>
-              <span class="field-hint">Adicione componentes ao escopo</span>
+              <span class="field-label">Módulos de Arquitetura, Stack e Infraestrutura</span>
+              <span class="field-hint">Selecione os entregáveis técnicos do projeto</span>
             </div>
-            <div class="chips-container" role="group" aria-label="Módulos técnicos recomendados">
-              <button type="button" class="chip" data-chip="API REST" aria-pressed="false">
+            <div class="chips-container" role="group" aria-label="Módulos técnicos de desenvolvimento web e software">
+              <button type="button" class="chip" data-chip="Landing Page / UI Responsiva" aria-pressed="false" title="Frontend, HTML/CSS/JS, animações e responsividade mobile">
                 <svg class="chip-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                   <line class="icon-plus-v" x1="12" y1="5" x2="12" y2="19"></line>
                   <line class="icon-plus-h" x1="5" y1="12" x2="19" y2="12"></line>
                   <polyline class="icon-check" points="20 6 9 17 4 12"></polyline>
                 </svg>
-                <span>API REST</span>
+                <span>Landing Page / UI Responsiva</span>
               </button>
 
-              <button type="button" class="chip" data-chip="Banco de Dados SQL" aria-pressed="false">
-                <svg class="chip-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <line class="icon-plus-v" x1="12" y1="5" x2="12" y2="19"></line>
-                  <line class="icon-plus-h" x1="5" y1="12" x2="19" y2="12"></line>
-                  <polyline class="icon-check" points="20 6 9 17 4 12"></polyline>
-                </svg>
-                <span>Banco de Dados SQL</span>
-              </button>
-
-              <button type="button" class="chip" data-chip="Painel Web/Dashboard" aria-pressed="false">
+              <button type="button" class="chip" data-chip="Painel Web/Dashboard" aria-pressed="false" title="Aplicação Web SPA, gráficos, tabelas e área administrativa">
                 <svg class="chip-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                   <line class="icon-plus-v" x1="12" y1="5" x2="12" y2="19"></line>
                   <line class="icon-plus-h" x1="5" y1="12" x2="19" y2="12"></line>
@@ -175,7 +172,34 @@
                 <span>Painel Web/Dashboard</span>
               </button>
 
-              <button type="button" class="chip" data-chip="Autenticação/JWT" aria-pressed="false">
+              <button type="button" class="chip" data-chip="API REST" aria-pressed="false" title="Construção de endpoints HTTP/REST, controllers, middlewares e validação">
+                <svg class="chip-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <line class="icon-plus-v" x1="12" y1="5" x2="12" y2="19"></line>
+                  <line class="icon-plus-h" x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline class="icon-check" points="20 6 9 17 4 12"></polyline>
+                </svg>
+                <span>API REST</span>
+              </button>
+
+              <button type="button" class="chip" data-chip="Banco de Dados SQL" aria-pressed="false" title="Modelagem relacional (PostgreSQL/MySQL), migrations, índices e queries">
+                <svg class="chip-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <line class="icon-plus-v" x1="12" y1="5" x2="12" y2="19"></line>
+                  <line class="icon-plus-h" x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline class="icon-check" points="20 6 9 17 4 12"></polyline>
+                </svg>
+                <span>Banco de Dados SQL</span>
+              </button>
+
+              <button type="button" class="chip" data-chip="NoSQL / Cache Redis" aria-pressed="false" title=" Persistência não-relacional (MongoDB) ou camada de cache em memória (Redis)">
+                <svg class="chip-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <line class="icon-plus-v" x1="12" y1="5" x2="12" y2="19"></line>
+                  <line class="icon-plus-h" x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline class="icon-check" points="20 6 9 17 4 12"></polyline>
+                </svg>
+                <span>NoSQL / Cache Redis</span>
+              </button>
+
+              <button type="button" class="chip" data-chip="Autenticação/JWT" aria-pressed="false" title="Login, controle de sessão JWT, OAuth2 Social Login e controle de permissões (RBAC)">
                 <svg class="chip-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                   <line class="icon-plus-v" x1="12" y1="5" x2="12" y2="19"></line>
                   <line class="icon-plus-h" x1="5" y1="12" x2="19" y2="12"></line>
@@ -184,7 +208,52 @@
                 <span>Autenticação/JWT</span>
               </button>
 
-              <button type="button" class="chip" data-chip="Docker/Deploy" aria-pressed="false">
+              <button type="button" class="chip" data-chip="Gateway de Pagamento" aria-pressed="false" title="Checkout transparente, webhooks financeiros, Pix, Stripe ou Mercado Pago">
+                <svg class="chip-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <line class="icon-plus-v" x1="12" y1="5" x2="12" y2="19"></line>
+                  <line class="icon-plus-h" x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline class="icon-check" points="20 6 9 17 4 12"></polyline>
+                </svg>
+                <span>Gateway de Pagamento</span>
+              </button>
+
+              <button type="button" class="chip" data-chip="Tempo Real / WebSockets" aria-pressed="false" title="Comunicação bidirecional em tempo real, chat, eventos ao vivo e notificações push">
+                <svg class="chip-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <line class="icon-plus-v" x1="12" y1="5" x2="12" y2="19"></line>
+                  <line class="icon-plus-h" x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline class="icon-check" points="20 6 9 17 4 12"></polyline>
+                </svg>
+                <span>Tempo Real / WebSockets</span>
+              </button>
+
+              <button type="button" class="chip" data-chip="Upload / Cloud Storage" aria-pressed="false" title="Upload de imagens/documentos, integração AWS S3, Cloudflare R2 ou GCS">
+                <svg class="chip-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <line class="icon-plus-v" x1="12" y1="5" x2="12" y2="19"></line>
+                  <line class="icon-plus-h" x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline class="icon-check" points="20 6 9 17 4 12"></polyline>
+                </svg>
+                <span>Upload / Cloud Storage</span>
+              </button>
+
+              <button type="button" class="chip" data-chip="Mensageria / E-mail & WhatsApp" aria-pressed="false" title="Disparo transacional de e-mails (SMTP/Resend), filas ou integração com API de WhatsApp">
+                <svg class="chip-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <line class="icon-plus-v" x1="12" y1="5" x2="12" y2="19"></line>
+                  <line class="icon-plus-h" x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline class="icon-check" points="20 6 9 17 4 12"></polyline>
+                </svg>
+                <span>Mensageria / E-mail & WhatsApp</span>
+              </button>
+
+              <button type="button" class="chip" data-chip="Testes Automatizados" aria-pressed="false" title="Suíte de testes unitários, testes de integração de API e testes E2E">
+                <svg class="chip-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <line class="icon-plus-v" x1="12" y1="5" x2="12" y2="19"></line>
+                  <line class="icon-plus-h" x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline class="icon-check" points="20 6 9 17 4 12"></polyline>
+                </svg>
+                <span>Testes Automatizados</span>
+              </button>
+
+              <button type="button" class="chip" data-chip="Docker/Deploy" aria-pressed="false" title="Conteinerização Docker, configuração de servidor Linux/Cloud, HTTPS e CI/CD">
                 <svg class="chip-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                   <line class="icon-plus-v" x1="12" y1="5" x2="12" y2="19"></line>
                   <line class="icon-plus-h" x1="5" y1="12" x2="19" y2="12"></line>
@@ -198,7 +267,7 @@
           <!-- 4. Especificação do Projeto -->
           <div class="field-section">
             <div class="field-header">
-              <label for="descricao-projeto" class="field-label">Especificação Funcional e Regras de Negócio</label>
+              <label for="descricao-projeto" class="field-label">Requisitos Funcionais do Sistema / Aplicação Web</label>
               <span id="char-counter" class="char-counter">0 / 2000</span>
             </div>
 
@@ -209,7 +278,7 @@
                 class="form-textarea"
                 rows="5"
                 maxlength="2000"
-                placeholder="Descreva os fluxos principais, integrações externas, perfis de acesso e entregáveis esperados..."
+                placeholder="Ex: Sistema web SaaS para gestão de clínicas com agendamento online, login de médicos e pacientes, notificações por WhatsApp e pagamento via Pix..."
                 required
               ></textarea>
             </div>
@@ -220,7 +289,7 @@
           <!-- 5. Ação Principal -->
           <div class="form-actions">
             <button type="submit" id="btn-calcular" class="btn-primary">
-              <span id="btn-calcular-texto">Calcular Estimativa e WBS</span>
+              <span id="btn-calcular-texto">Gerar Escopo Técnico (WBS) e Orçamento</span>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <line x1="5" y1="12" x2="19" y2="12"></line>
                 <polyline points="12 5 19 12 12 19"></polyline>
@@ -239,26 +308,26 @@
           <div class="empty-blueprint">
             <div class="blueprint-icon" aria-hidden="true">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="3" y="3" width="18" height="18" rx="2"></rect>
-                <line x1="3" y1="9" x2="21" y2="9"></line>
-                <line x1="9" y1="21" x2="9" y2="9"></line>
+                <polyline points="16 18 22 12 16 6"></polyline>
+                <polyline points="8 6 2 12 8 18"></polyline>
+                <line x1="14" y1="4" x2="10" y2="20"></line>
               </svg>
             </div>
-            <h2 class="empty-title">Nenhuma proposta gerada</h2>
-            <p class="empty-text">Defina os parâmetros ao lado ou selecione um preset de arquitetura para decompor os módulos técnicos e calcular o orçamento.</p>
+            <h2 class="empty-title">Pronto para estimar seu projeto de software</h2>
+            <p class="empty-text">Escolha um template de aplicação web ao lado ou selecione os módulos da stack técnica (API, Banco de Dados, UI, Deploy) para gerar a Estrutura Analítica do Projeto (WBS) e o orçamento completo.</p>
 
             <div class="blueprint-steps" aria-hidden="true">
               <div class="blueprint-step">
-                <span class="step-index">01</span>
-                <span class="step-name">Decomposição WBS via IA</span>
+                <span class="step-index">01 · WBS</span>
+                <span class="step-name">Decomposição em Módulos de Software</span>
               </div>
               <div class="blueprint-step">
-                <span class="step-index">02</span>
-                <span class="step-name">Cálculo Determinístico (+20%)</span>
+                <span class="step-index">02 · +20%</span>
+                <span class="step-name">Reserva de Risco de Engenharia</span>
               </div>
               <div class="blueprint-step">
-                <span class="step-index">03</span>
-                <span class="step-name">Conversão Cambial USD-BRL</span>
+                <span class="step-index">03 · USD</span>
+                <span class="step-name">Conversão Cambial Comercial</span>
               </div>
             </div>
           </div>

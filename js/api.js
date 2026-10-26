@@ -4,16 +4,87 @@
  *
  * Características Arquiteturais:
  * 1. Parametrização Externa: Toda configuração da IA (AI_API_URL, AI_MODEL, AI_API_KEY) é lida de js/config.js.
- * 2. Carregamento Dinâmico: 'config.js' importado via try/catch, sem quebrar caso o arquivo não exista.
- * 3. Saída JSON Estruturada: Solicita e valida retorno estritamente no schema WBS do projeto.
- * 4. Resiliência Total: Aciona automaticamente js/fallback.js em caso de erro, timeout ou configuração ausente.
- * 5. Execução Paralela: Consulta simultânea da API de IA e da API de câmbio via Promise.all.
+ * 2. Idempotência Estrita: Garante que para a mesma descrição e chips o retorno seja idêntico (temperature: 0, seed fixo e cache de escopo).
+ * 3. Carregamento Dinâmico: 'config.js' importado via try/catch, sem quebrar caso o arquivo não exista.
+ * 4. Saída JSON Estruturada: Solicita e valida retorno estritamente no schema WBS do projeto.
+ * 5. Resiliência Total: Aciona automaticamente js/fallback.js em caso de erro, timeout ou configuração ausente.
+ * 6. Execução Paralela: Consulta simultânea da API de IA e da API de câmbio via Promise.all.
  */
 
 import { COTACAO_USD_FALLBACK, gerarEscopoFallback } from "./fallback.js";
 
 const EXCHANGE_API_URL = "https://economia.awesomeapi.com.br/json/last/USD-BRL";
 const TIMEOUT_PADRAO_MS = 15000;
+const CACHE_IDEMPOTENCIA_KEY = "freelascope_idempotency_cache_v1";
+
+// Cache em memória durante a sessão da página
+const cacheMemoria = new Map();
+
+/**
+ * Normaliza a entrada e gera uma chave de idempotência determinística.
+ *
+ * @param {string} descricao
+ * @param {Array<string>} chips
+ * @param {string} modelo
+ * @returns {string}
+ */
+export function gerarChaveIdempotencia(descricao = "", chips = [], modelo = "") {
+  const textoNormalizado = String(descricao || "")
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, " ");
+
+  const chipsOrdenados = (Array.isArray(chips) ? [...chips] : [])
+    .map(c => String(c).trim().toLowerCase())
+    .sort()
+    .join("|");
+
+  const modeloLimpo = String(modelo || "").trim().toLowerCase();
+
+  return `${modeloLimpo}:::${chipsOrdenados}:::${textoNormalizado}`;
+}
+
+/**
+ * Busca no cache de idempotência (memória e sessionStorage).
+ */
+function obterDoCacheIdempotencia(chave) {
+  if (!chave) return null;
+
+  if (cacheMemoria.has(chave)) {
+    return cacheMemoria.get(chave);
+  }
+
+  try {
+    if (typeof sessionStorage !== "undefined") {
+      const bruto = sessionStorage.getItem(`${CACHE_IDEMPOTENCIA_KEY}_${chave}`);
+      if (bruto) {
+        const parsed = JSON.parse(bruto);
+        cacheMemoria.set(chave, parsed);
+        return parsed;
+      }
+    }
+  } catch {
+    // sessionStorage indisponível ou desabilitado
+  }
+  return null;
+}
+
+/**
+ * Salva no cache de idempotência.
+ */
+function salvarNoCacheIdempotencia(chave, escopo) {
+  if (!chave || !escopo) return;
+
+  cacheMemoria.set(chave, escopo);
+
+  try {
+    if (typeof sessionStorage !== "undefined") {
+      sessionStorage.setItem(`${CACHE_IDEMPOTENCIA_KEY}_${chave}`, JSON.stringify(escopo));
+    }
+  } catch {
+    // Ignora restrições de sessionStorage
+  }
+}
 
 /**
  * Obtém de forma defensiva as configurações de conexão da IA definidas em js/config.js.
@@ -97,7 +168,7 @@ export async function buscarCotacaoUSD() {
 }
 
 /**
- * Decompõe o projeto em módulos técnicos utilizando o endpoint e modelo definidos em js/config.js.
+ * Decompõe o projeto em módulos técnicos com garantia de idempotência para o mesmo escopo.
  * Em caso de configuração ausente, erro de requisição ou timeout, aciona o fallback.js automaticamente.
  *
  * @param {string} descricao Texto de descrição do projeto
@@ -122,7 +193,19 @@ export async function consultarEscopoIA(descricao, chipsSelecionados = []) {
     };
   }
 
-  // 2. Monta as instruções de sistema e o prompt com contrato JSON explícito
+  // 2. Verificação no cache de idempotência (mesma descrição + mesmos chips + mesmo modelo)
+  const chaveIdempotencia = gerarChaveIdempotencia(textoDescricao, chips, configIA.model);
+  const escopoEmCache = obterDoCacheIdempotencia(chaveIdempotencia);
+
+  if (escopoEmCache) {
+    return {
+      escopo: JSON.parse(JSON.stringify(escopoEmCache)),
+      usouFallback: false,
+      motivoFallback: null
+    };
+  }
+
+  // 3. Monta as instruções de sistema e o prompt com contrato JSON explícito
   const chipsInfo = chips.length > 0
     ? `\nMódulos de infraestrutura e stack obrigatórios selecionados pelo usuário: ${chips.join(", ")}.`
     : "";
@@ -144,9 +227,11 @@ Regras obrigatórias:
 3. Inclua entre 4 e 7 módulos cobrindo os requisitos e os chips de stack selecionados.
 4. Nunca calcule preços monetários; retorne apenas o objeto JSON puro.`;
 
+  // Payload com temperature: 0 e seed fixo para reforçar determinismo
   const payload = {
     model: configIA.model,
-    temperature: 0.2,
+    temperature: 0,
+    seed: 42,
     response_format: { type: "json_object" },
     messages: [
       { role: "system", content: systemInstruction },
@@ -190,6 +275,9 @@ Regras obrigatórias:
       throw new Error("O JSON retornado pela IA não seguiu o schema esperado.");
     }
 
+    // Persiste no cache de idempotência para chamadas futuras idênticas
+    salvarNoCacheIdempotencia(chaveIdempotencia, escopoGerado);
+
     return {
       escopo: escopoGerado,
       usouFallback: false,
@@ -199,8 +287,11 @@ Regras obrigatórias:
     const mensagemSegura = (erro?.message || "Erro desconhecido").replace(configIA.apiKey, "[REDACTED_API_KEY]");
     console.warn("[API IA] Contingência acionada. Motivo:", mensagemSegura);
 
+    const escopoFallback = gerarEscopoFallback(textoDescricao, chips);
+    salvarNoCacheIdempotencia(chaveIdempotencia, escopoFallback);
+
     return {
-      escopo: gerarEscopoFallback(textoDescricao, chips),
+      escopo: escopoFallback,
       usouFallback: true,
       motivoFallback: `Falha na comunicação com a API de IA (${mensagemSegura}). Escopo gerado pelo motor local.`
     };

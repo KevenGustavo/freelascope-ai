@@ -1,6 +1,7 @@
 /* ==========================================================================
    FreelaScope — Design System de Engenharia (CSS3 Puro)
    Estética: Precision Workbench (Zinc / Carbon / Tabular Typography)
+   Design Responsivo Fluido Multi-Tela via Container Queries
    ========================================================================== */
 
 :root {
@@ -21,7 +22,7 @@
   --text-secondary: #a1a1aa;
   --text-muted: #71717a;
 
-  /* Acentos Funcionais (Sem gradientes artificiais) */
+  /* Acentos Funcionais */
   --accent-blue: #2563eb;
   --accent-blue-hover: #1d4ed8;
   --accent-blue-text: #60a5fa;
@@ -77,6 +78,7 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  overflow-x: hidden;
 }
 
 button, input, textarea {
@@ -112,10 +114,10 @@ button, input, textarea {
 }
 
 .header-container {
-  max-width: 1280px;
+  max-width: 1320px;
   height: 100%;
   margin: 0 auto;
-  padding: 0 1.5rem;
+  padding: 0 clamp(0.75rem, 2vw, 1.5rem);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -137,6 +139,7 @@ button, input, textarea {
   align-items: center;
   justify-content: center;
   color: var(--text-primary);
+  flex-shrink: 0;
 }
 
 .brand-text {
@@ -161,7 +164,7 @@ button, input, textarea {
   font-size: 0.82rem;
 }
 
-@media (max-width: 540px) {
+@media (max-width: 580px) {
   .brand-divider,
   .brand-subtitle {
     display: none;
@@ -179,12 +182,14 @@ button, input, textarea {
   font-size: 0.75rem;
   font-weight: 500;
   color: var(--text-secondary);
+  white-space: nowrap;
 }
 
 .status-dot {
   width: 6px;
   height: 6px;
   border-radius: 50%;
+  flex-shrink: 0;
 }
 
 .status-idle { background-color: var(--status-ok); }
@@ -197,32 +202,37 @@ button, input, textarea {
 }
 
 /* --------------------------------------------------------------------------
-   Workbench Grid
+   Workbench Grid (Multi-Screen Fluid Layout)
    -------------------------------------------------------------------------- */
 .app-main {
   flex: 1;
-  padding: 1.75rem 1.5rem 3rem;
+  padding: clamp(1rem, 2vw, 1.75rem) clamp(0.75rem, 2vw, 1.5rem) 3rem;
+  width: 100%;
 }
 
 .workbench-grid {
-  max-width: 1280px;
+  max-width: 1320px;
   margin: 0 auto;
   display: grid;
   grid-template-columns: 1fr;
   gap: 1.5rem;
+  min-width: 0;
 }
 
-@media (min-width: 980px) {
+@media (min-width: 1024px) {
   .workbench-grid {
-    grid-template-columns: minmax(440px, 500px) 1fr;
+    grid-template-columns: minmax(360px, 460px) minmax(420px, 1fr);
     align-items: start;
   }
 }
 
 .results-column {
+  container-type: inline-size;
+  container-name: results-col;
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
+  min-width: 0;
 }
 
 /* --------------------------------------------------------------------------
@@ -232,15 +242,18 @@ button, input, textarea {
   background-color: var(--bg-panel);
   border: 1px solid var(--border-base);
   border-radius: var(--radius-lg);
+  min-width: 0;
 }
 
 .panel-config {
-  padding: 1.5rem;
+  container-type: inline-size;
+  container-name: config-col;
+  padding: clamp(1rem, 2.5vw, 1.5rem);
 }
 
 .panel-header {
-  padding-bottom: 1.25rem;
-  margin-bottom: 1.25rem;
+  padding-bottom: 1.15rem;
+  margin-bottom: 1.15rem;
   border-bottom: 1px solid var(--border-subtle);
 }
 
@@ -261,14 +274,15 @@ button, input, textarea {
    Seções de Formulário
    -------------------------------------------------------------------------- */
 .field-section {
-  margin-bottom: 1.35rem;
+  margin-bottom: 1.25rem;
 }
 
 .field-header {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  gap: 0.5rem;
+  gap: 0.35rem 0.5rem;
+  flex-wrap: wrap;
   margin-bottom: 0.55rem;
 }
 
@@ -290,14 +304,14 @@ button, input, textarea {
   font-family: var(--font-mono);
 }
 
-/* 1. Presets de Arquitetura */
+/* 1. Presets de Arquitetura (com Container Query) */
 .presets-grid {
   display: grid;
   grid-template-columns: 1fr;
   gap: 0.5rem;
 }
 
-@media (min-width: 520px) {
+@container config-col (min-width: 360px) {
   .presets-grid {
     grid-template-columns: repeat(3, 1fr);
   }
@@ -315,6 +329,7 @@ button, input, textarea {
   cursor: pointer;
   text-align: left;
   transition: background-color var(--transition), border-color var(--transition);
+  min-width: 0;
 }
 
 .btn-template:hover {
@@ -336,6 +351,7 @@ button, input, textarea {
   align-items: center;
   justify-content: center;
   color: var(--text-secondary);
+  flex-shrink: 0;
 }
 
 .btn-template:hover .preset-icon {
@@ -347,30 +363,38 @@ button, input, textarea {
   display: flex;
   flex-direction: column;
   gap: 0.1rem;
+  min-width: 0;
 }
 
 .preset-name {
   font-size: 0.8rem;
   font-weight: 600;
   color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .preset-meta {
   font-size: 0.7rem;
   color: var(--text-muted);
   line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
-/* 2. Segmented Control de Senioridade + Input Valor/Hora */
+/* 2. Senioridade + Input Valor/Hora (com Container Query) */
 .rate-bar {
   display: grid;
   grid-template-columns: 1fr;
   gap: 0.6rem;
 }
 
-@media (min-width: 520px) {
+@container config-col (min-width: 380px) {
   .rate-bar {
-    grid-template-columns: 1fr 135px;
+    grid-template-columns: 1fr 130px;
     align-items: stretch;
   }
 }
@@ -389,13 +413,14 @@ button, input, textarea {
   background: transparent;
   border: 1px solid transparent;
   border-radius: var(--radius-sm);
-  padding: 0.45rem 0.4rem;
+  padding: 0.45rem 0.35rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: all var(--transition);
+  min-width: 0;
 }
 
 .seniority-title {
@@ -461,13 +486,14 @@ button, input, textarea {
   font-weight: 600;
   padding: 0.5rem 0.35rem;
   text-align: right;
+  min-width: 0;
 }
 
 .form-input:focus {
   outline: none;
 }
 
-/* 3. Chips de Escopo Técnico (com SVG Toggle) */
+/* 3. Chips de Escopo Técnico */
 .chips-container {
   display: flex;
   flex-wrap: wrap;
@@ -536,7 +562,7 @@ button, input, textarea {
   line-height: 1.55;
   padding: 0.75rem;
   resize: vertical;
-  min-height: 112px;
+  min-height: 110px;
   display: block;
 }
 
@@ -591,10 +617,10 @@ button, input, textarea {
 }
 
 /* --------------------------------------------------------------------------
-   Painel Direito: Estado Vazio (Blueprint) & Loading
+   Painel Direito: Estado Vazio & Loading
    -------------------------------------------------------------------------- */
 .empty-panel {
-  padding: 3rem 2rem;
+  padding: clamp(2rem, 5vw, 3.25rem) clamp(1rem, 3vw, 2rem);
   background-image: radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px);
   background-size: 18px 18px;
 }
@@ -634,11 +660,17 @@ button, input, textarea {
 
 .blueprint-steps {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: 1fr;
   gap: 0.5rem;
   text-align: left;
   border-top: 1px solid var(--border-base);
   padding-top: 1.15rem;
+}
+
+@container results-col (min-width: 420px) {
+  .blueprint-steps {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
 .blueprint-step {
@@ -662,12 +694,6 @@ button, input, textarea {
   font-size: 0.72rem;
   color: var(--text-secondary);
   line-height: 1.3;
-}
-
-@media (max-width: 540px) {
-  .blueprint-steps {
-    grid-template-columns: 1fr;
-  }
 }
 
 .loading-panel {
@@ -705,7 +731,7 @@ button, input, textarea {
    Proposta Técnica e Comercial (Resultado)
    -------------------------------------------------------------------------- */
 .result-panel {
-  padding: 1.5rem;
+  padding: clamp(1rem, 2.5vw, 1.5rem);
 }
 
 .banner-alerta {
@@ -738,7 +764,7 @@ button, input, textarea {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 1rem;
+  gap: 0.5rem 1rem;
   flex-wrap: wrap;
   margin-bottom: 0.6rem;
 }
@@ -754,10 +780,11 @@ button, input, textarea {
 }
 
 .proposal-title {
-  font-size: 1.25rem;
+  font-size: clamp(1.1rem, 2.5vw, 1.3rem);
   font-weight: 600;
   letter-spacing: -0.02em;
   color: var(--text-primary);
+  word-break: break-word;
 }
 
 .exchange-pill {
@@ -772,6 +799,7 @@ button, input, textarea {
   font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
   color: var(--text-secondary);
+  white-space: nowrap;
 }
 
 .exchange-pill strong {
@@ -785,7 +813,7 @@ button, input, textarea {
   margin-bottom: 1.25rem;
 }
 
-/* Quadro Financeiro Estruturado (Hairline Grid) */
+/* Quadro Financeiro Estruturado (Hairline Grid com Container Query) */
 .financial-board {
   background-color: var(--border-base);
   border: 1px solid var(--border-base);
@@ -803,7 +831,7 @@ button, input, textarea {
   gap: 1px;
 }
 
-@media (min-width: 560px) {
+@container results-col (min-width: 480px) {
   .financial-primary {
     grid-template-columns: 1.2fr 1fr;
   }
@@ -811,9 +839,10 @@ button, input, textarea {
 
 .financial-hero {
   background-color: var(--bg-canvas);
-  padding: 1rem 1.1rem;
+  padding: clamp(0.75rem, 2vw, 1.1rem);
   display: flex;
   flex-direction: column;
+  min-width: 0;
 }
 
 .financial-hero-brl {
@@ -823,11 +852,14 @@ button, input, textarea {
 .hero-value {
   font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
-  font-size: 1.45rem;
+  font-size: clamp(1.15rem, 3.2cqi, 1.45rem);
   font-weight: 700;
   letter-spacing: -0.02em;
   color: var(--text-primary);
   margin: 0.2rem 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .financial-hero-brl .hero-value {
@@ -840,25 +872,26 @@ button, input, textarea {
 
 .financial-breakdown {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: 1fr;
   gap: 1px;
 }
 
-@media (max-width: 520px) {
+@container results-col (min-width: 380px) {
   .financial-breakdown {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
 .breakdown-cell {
   background-color: var(--bg-panel);
-  padding: 0.75rem 1rem;
+  padding: 0.75rem clamp(0.6rem, 1.5vw, 1rem);
   display: flex;
   flex-direction: column;
+  min-width: 0;
 }
 
 .metric-label {
-  font-size: 0.7rem;
+  font-size: 0.68rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -868,18 +901,24 @@ button, input, textarea {
 .breakdown-value {
   font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
-  font-size: 0.98rem;
+  font-size: clamp(0.85rem, 2.2cqi, 0.98rem);
   font-weight: 600;
   color: var(--text-primary);
   margin: 0.15rem 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .metric-caption {
-  font-size: 0.7rem;
+  font-size: 0.68rem;
   color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-/* Tabela WBS */
+/* Tabela WBS (Rolagem Suave sem Quebra) */
 .wbs-section {
   margin-bottom: 1.35rem;
 }
@@ -889,6 +928,8 @@ button, input, textarea {
   justify-content: space-between;
   align-items: baseline;
   margin-bottom: 0.55rem;
+  gap: 0.5rem;
+  flex-wrap: wrap;
 }
 
 .wbs-title {
@@ -905,7 +946,8 @@ button, input, textarea {
 .table-container {
   border: 1px solid var(--border-base);
   border-radius: var(--radius-md);
-  overflow: hidden;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   background-color: var(--bg-canvas);
 }
 
@@ -913,6 +955,7 @@ button, input, textarea {
   width: 100%;
   border-collapse: collapse;
   font-size: 0.83rem;
+  min-width: 320px;
 }
 
 .wbs-table th {
@@ -924,6 +967,7 @@ button, input, textarea {
   letter-spacing: 0.04em;
   padding: 0.6rem 0.85rem;
   border-bottom: 1px solid var(--border-base);
+  white-space: nowrap;
 }
 
 .wbs-table td {
@@ -947,6 +991,7 @@ button, input, textarea {
   font-size: 0.7rem;
   font-family: var(--font-mono);
   font-weight: 500;
+  white-space: nowrap;
 }
 
 .badge-complexidade-baixa {
@@ -974,6 +1019,7 @@ button, input, textarea {
   gap: 0.6rem;
   padding-top: 1rem;
   border-top: 1px solid var(--border-subtle);
+  flex-wrap: wrap;
 }
 
 .btn-secondary {
@@ -988,11 +1034,20 @@ button, input, textarea {
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
-  transition: background-color var(--transition);
+  transition: all var(--transition);
 }
 
-.btn-secondary:hover {
+.btn-secondary:hover:not(:disabled) {
   background-color: var(--bg-hover);
+}
+
+.btn-secondary.btn-saved,
+.btn-secondary:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  background-color: var(--bg-canvas);
+  border-color: var(--border-base);
+  color: var(--text-muted);
 }
 
 .btn-ghost {
@@ -1019,7 +1074,7 @@ button, input, textarea {
    Histórico de Estimativas
    -------------------------------------------------------------------------- */
 .history-panel {
-  padding: 1.25rem 1.5rem;
+  padding: clamp(1rem, 2vw, 1.25rem) clamp(1rem, 2.5vw, 1.5rem);
 }
 
 .history-header {
@@ -1027,6 +1082,7 @@ button, input, textarea {
   align-items: center;
   justify-content: space-between;
   margin-bottom: 0.85rem;
+  gap: 0.5rem;
 }
 
 .history-title-group {
@@ -1083,10 +1139,20 @@ button, input, textarea {
   border-radius: var(--radius-md);
   padding: 0.75rem 0.9rem;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.75rem;
   transition: border-color var(--transition);
+  min-width: 0;
+}
+
+@container results-col (min-width: 460px) {
+  .history-item {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
 }
 
 .history-item:hover {
@@ -1103,12 +1169,14 @@ button, input, textarea {
   align-items: baseline;
   gap: 0.5rem;
   margin-bottom: 0.15rem;
+  flex-wrap: wrap;
 }
 
 .history-item-title {
   font-size: 0.85rem;
   font-weight: 600;
   color: var(--text-primary);
+  word-break: break-word;
 }
 
 .history-item-date {
@@ -1148,6 +1216,13 @@ button, input, textarea {
   display: flex;
   gap: 0.35rem;
   flex-shrink: 0;
+  align-self: flex-end;
+}
+
+@container results-col (min-width: 460px) {
+  .history-item-actions {
+    align-self: center;
+  }
 }
 
 .btn-icon-action {
